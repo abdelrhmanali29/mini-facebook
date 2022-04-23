@@ -1,0 +1,723 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"version": "1.0.0",
+		"title": "Authentication system",
+		"description": "An suthentication system for users."
+	},
+	"tags": [
+		{
+			"name": "Users",
+			"description": "Users endpoints"
+		},
+		{
+			"name": "Users Protected",
+			"description": "Users protected endpoints for logged in users"
+		},
+		{
+			"name": "Post",
+			"description": "Posts endpoints for logged in users only"
+		}
+	],
+	"paths": {
+		"/users/signup": {
+			"post": {
+				"tags": ["Users"],
+				"summary": "Signup endpoint",
+				"operationId": "signup",
+				"requestBody": {
+					"description": "user signup data",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/User"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "string",
+											"example": "success"
+										},
+										"statusCode": {
+											"type": "number",
+											"example": 201
+										},
+										"data": {
+											"type": "object",
+											"properties": {
+												"_id": {
+													"type": "string",
+													"example": "507f1f77bcf86cd799439011"
+												},
+												"name": {
+													"type": "string",
+													"example": "abdo"
+												},
+												"email": {
+													"type": "string",
+													"example": "abdo@example.com"
+												}
+											}
+										}
+									}
+								}
+							}
+						},
+						"headers": {
+							"Set-Cookie": {
+								"schema": {
+									"type": "string",
+									"example": "jwt=abcasfa33asfde12345; Path=/; HttpOnly"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request. email:should be unique.password:should NOT have fewer than 8 characters.password:passwords are not the same"
+					},
+					"500": {
+						"description": "Error in sign up. Try again later."
+					}
+				}
+			}
+		},
+		"/users/login": {
+			"post": {
+				"tags": ["Users"],
+				"summary": "Login endpoint",
+				"operationId": "login",
+				"requestBody": {
+					"description": "User login data",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"email": {
+										"type": "string",
+										"example": "abdo@example.com"
+									},
+									"password": {
+										"type": "string",
+										"example": "abdo1_3passowrd"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "string",
+											"example": "success"
+										},
+										"statusCode": {
+											"type": "number",
+											"example": 200
+										},
+										"data": {
+											"type": "object",
+											"properties": {
+												"_id": {
+													"type": "string",
+													"example": "507f1f77bcf86cd799439011"
+												},
+												"name": {
+													"type": "string",
+													"example": "abdo"
+												},
+												"email": {
+													"type": "string",
+													"example": "abdo@example.com"
+												}
+											}
+										}
+									}
+								}
+							}
+						},
+						"headers": {
+							"Set-Cookie": {
+								"schema": {
+									"type": "string",
+									"example": "jwt=abcasfa33asfde12345; Path=/; HttpOnly"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Incorrect email or password. / Please provide email and password!"
+					},
+					"500": {
+						"description": "Error in login. Please log in again."
+					}
+				}
+			}
+		},
+		"/users/forgetPassword": {
+			"post": {
+				"tags": ["Users"],
+				"summary": "Forget password endpoint",
+				"operationId": "forgetPassword",
+				"requestBody": {
+					"description": "User email",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"email": {
+										"type": "string",
+										"example": "abdo@example.com"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "string",
+											"example": "success"
+										},
+										"message": {
+											"type": "object",
+											"example": "Token sent to email!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "There is no user with email address."
+					},
+					"500": {
+						"description": "There was an error sending the email. Try again later!"
+					}
+				}
+			}
+		},
+		"/users/resetPassword/{resetToken}": {
+			"patch": {
+				"tags": ["Users"],
+				"summary": "Reset password endpoint",
+				"operationId": "resetPassword",
+				"requestBody": {
+					"description": "User new password and new password confirm",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"password": {
+										"type": "string",
+										"example": "newPass1234"
+									},
+									"passwordConfirm": {
+										"type": "string",
+										"example": "newPass1234"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "string",
+											"example": "success"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Should support password and password confirm. / Token is invalid or has expired. / Password not the same."
+					},
+					"500": {
+						"description": "Error in login. Please log in again."
+					}
+				}
+			}
+		},
+		"/users/logout": {
+			"post": {
+				"tags": ["Users Protected"],
+				"summary": "Logout endpoint",
+				"operationId": "logout",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "string",
+											"example": "success"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Invalid token, Please log in again."
+					}
+				}
+			}
+		},
+		"/users/me": {
+			"get": {
+				"tags": ["Users Protected"],
+				"summary": "User profile endpoint",
+				"operationId": "me",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "string",
+											"example": "success"
+										},
+										"statusCode": {
+											"type": "number",
+											"example": 200
+										},
+										"data": {
+											"type": "object",
+											"properties": {
+												"_id": {
+													"type": "string",
+													"example": "507f1f77bcf86cd799439011"
+												},
+												"name": {
+													"type": "string",
+													"example": "abdo"
+												},
+												"email": {
+													"type": "string",
+													"example": "abdo@example.com"
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/updateMe": {
+			"patch": {
+				"tags": ["Users Protected"],
+				"summary": "User profile update endpoint",
+				"operationId": "updateMe",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"requestBody": {
+					"description": "user update data",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/User"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "string",
+											"example": "success"
+										},
+										"statusCode": {
+											"type": "number",
+											"example": 200
+										},
+										"data": {
+											"type": "object",
+											"properties": {
+												"_id": {
+													"type": "string",
+													"example": "507f1f77bcf86cd799439011"
+												},
+												"name": {
+													"type": "string",
+													"example": "abdo"
+												},
+												"email": {
+													"type": "string",
+													"example": "abdo@example.com"
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "This route is not for password updates. / validation failed."
+					}
+				}
+			}
+		},
+		"/users/deleteMe": {
+			"patch": {
+				"tags": ["Users Protected"],
+				"summary": "User profile delete endpoint",
+				"operationId": "deleteMe",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "string",
+											"example": "success"
+										},
+										"statusCode": {
+											"type": "number",
+											"example": 200
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid token, Please log in again."
+					}
+				}
+			}
+		},
+		"/users/updateMyPassword": {
+			"patch": {
+				"tags": ["Users Protected"],
+				"summary": "User update profile password endpoint",
+				"operationId": "updateMyPassword",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"requestBody": {
+					"description": "User new password and new password confirm",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"password": {
+										"type": "string",
+										"example": "newPass1234"
+									},
+									"passwordConfirm": {
+										"type": "string",
+										"example": "newPass1234"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "string",
+											"example": "success"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Should support password and password confirm. / Token is invalid or has expired. / Password not the same."
+					},
+					"500": {
+						"description": "Error in login. Please log in again."
+					}
+				}
+			}
+		},
+		"/posts": {
+			"get": {
+				"tags": ["Posts"],
+				"summary": "Posts endpoint",
+				"operationId": "posts",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "string",
+											"example": "success"
+										},
+										"statusCode": {
+											"type": "number",
+											"example": 200
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"type": "object",
+												"$ref": "#/components/schemas/Post"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Invalid token, Please log in again."
+					},
+					"403": {
+						"description": "You do not have permission to perform this action."
+					}
+				}
+			},
+			"post": {
+				"tags": ["Posts"],
+				"summary": "Posts endpoint",
+				"operationId": "createPost",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"requestBody": {
+					"description": "Post body",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"text": {
+										"type": "string",
+										"example": "post caption like that"
+									},
+									"image": {
+										"type": "form-data"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "string",
+											"example": "success"
+										},
+										"statusCode": {
+											"type": "number",
+											"example": 200
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"type": "object",
+												"$ref": "#/components/schemas/Post"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Invalid token, Please log in again."
+					}
+				}
+			}
+		},
+		"/posts/{postId}": {
+			"get": {
+				"tags": ["Posts"],
+				"summary": "Post by ID endpoint",
+				"operationId": "postById",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "string",
+											"example": "success"
+										},
+										"statusCode": {
+											"type": "number",
+											"example": 200
+										},
+										"data": {
+											"type": "object",
+											"$ref": "#/components/schemas/Post"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Invalid token, Please log in again."
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"User": {
+				"type": "object",
+				"properties": {
+					"username": {
+						"type": "string",
+						"example": "abdo"
+					},
+					"email": {
+						"type": "string",
+						"example": "abdo@example.com"
+					},
+					"password": {
+						"type": "string",
+						"example": "abdo_passowrd"
+					},
+					"mobileNumber": {
+						"type": "string",
+						"example": "+20111111111111111"
+					}
+				}
+			},
+			"Post": {
+				"type": "object",
+				"properties": {
+					"text": {
+						"type": "string",
+						"example": "this is post text"
+					},
+					"image": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"securitySchemes": {
+			"bearerAuth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		}
+	},
+	"servers": [
+		{
+			"description": "Try it Now",
+			"url": "http://localhost:3000/api/v1/"
+		}
+	]
+}
