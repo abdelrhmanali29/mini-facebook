@@ -1,4 +1,4 @@
-# **Authentication system**
+# **Mini-facebook**
 
 This is a project meant to be used as a starting point for APIs that require user authentication (sign up and sign in). And each user should has a role (user or admin) so based on his role can access some endpoints and perform some operations.
 
@@ -12,7 +12,7 @@ This is a project meant to be used as a starting point for APIs that require use
 
 ## To run project locally:
 
-- Clone repo `git clone https://github.com/abdelrhmanali29/authentication.git`
+- Clone repo `git clone https://github.com/abdelrhmanali29/mini-facebook.git`
 - Add your environment variables in `.env.example`
 - Change `.env.example` to '.env.production`
 - Run `docker-compose up --build` in root folder
@@ -26,10 +26,6 @@ This is a project meant to be used as a starting point for APIs that require use
 - Reset password
 - Update password or profile
 - Delete user profile
-- Create roles and permissions
-- Set roles for users
-- List roles and permissions
-- List users
 
 ## Overview
 
@@ -38,20 +34,20 @@ This is a project meant to be used as a starting point for APIs that require use
 3. User can get his profile at `/users/me` endpoint
 4. User can update his profile at `/users/updateMe` endpoint
 5. User can user `/users/forgotPassword` endpoint if he forget his password and will receive reset token at his email
-6. User will reset his passwrod after receiving reset token via email by `/users/resetPAssword/:token`
+6. User will reset his password after receiving reset token via email by `/users/resetPAssword/:token`
 7. Admin can create roles and permissions
 8. Admin can set role for specific user
-**(NOTE)**: first off all you must create user and set his role with 'admin'
+   **(NOTE)**: first off all you must create user and set his role with 'admin'
 
 ## How to ...?
 
 ### Protect endpoints
 
 - check if token is provided
-- Verfication token if not valid it will
+- Verification token if not valid it will
 - Check if user still exists
 - Check if user changed password after the token was issued
-- If everything is OK, retrun current use
+- If everything is OK, return current use
 
 ### Restrict endpoints
 

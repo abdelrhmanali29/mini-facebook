@@ -7,7 +7,6 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const config = require('../../config/config');
 const utils = require('./user.utils');
-const User = require('./user.model');
 
 module.exports = {
 	async create(user) {
